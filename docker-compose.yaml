@@ -1,0 +1,27 @@
+version: '2'
+services:
+  shopify:
+    build: .
+    environment:
+      - PORT=8080
+      - DEBUG=*:*
+      - TIMEOUT=300000
+      - PRODUCTION=FALSE
+      - PRODUCT_POD_URL=http://127.0.0.1:8082/api/product/1/
+      - VOCABULARY_GF_URL=http://127.0.0.1:8083/api/gf/1/vocabulary
+      - VOCABULARY_POD_URL=http://127.0.0.1:8087/api/vocabulary/1/
+      - PRODUCTS_URL=http://127.0.0.1:8081/api/product/1/generate/basic
+      - HANG_TIMEOUT=300
+      - DB_WEBAPP=shopify
+      - TEXTUAL_DB_HOST=127.0.0.1
+      - TEXTUAL_DB_PASSWORD=yeq25CRCEVMP
+      - TEXTUAL_DB_USER=shopify
+      - SHOPIFY_API_KEY=b1208170edc164f593b10927e0c4623c
+      - SHOPIFY_API_SECRET=4e9e54b4cf9cde7993e601375c3dffec
+      - FORWARD_ADDRESS=https://a6d06023.ngrok.io/app/shopify
+      - CUSTOMER_CREATE_OR_GET=http://127.0.0.1:8087/api/vocabulary/1/shopify/shop
+      - CUSTOMER_SET_PAYMENT_ID=http://127.0.0.1:8087/api/vocabulary/1/shopify/payment
+      - JWT_SECRET=textualsecret
+    ports:
+     - "8080:8080"
+    network_mode: "host"

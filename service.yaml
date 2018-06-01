@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopify-webapp
+  namespace: dev
+  labels:
+    app: shopify-webapp
+    tier: frontend
+    integration: shopify
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: shopify-webapp
+    tier: frontend
+    integration: shopify

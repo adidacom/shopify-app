@@ -1,0 +1,82 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: shopify-webapp
+  namespace: dev
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: shopify-webapp
+        tier: frontend
+        integration: shopify
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-nodepool: "textual-cluster-2-default-pool-2cpu"
+      containers:
+        - image: eu.gcr.io/textual-services/shopify-webapp-dev:v0.0.40
+          name: shopify-webapp
+          readinessProbe:
+            httpGet:
+              path: /app/shopify/
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 20
+          livenessProbe:
+            httpGet:
+              path: /app/shopify/
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 20
+          resources:
+            limits:
+              memory: 100Mi
+            requests:
+              memory: 100Mi
+          env:
+            - name: PORT
+              value: "8080"
+            - name: TIMEOUT
+              value: "300000"
+            - name: PRODUCTION
+              value: "FALSE"
+            - name: PRODUCT_POD_URL
+              value: "http://product.dev/api/product/1/"
+            - name: VOCABULARY_GF_URL
+              value: "http://gf.dev:8080/api/gf/1/vocabulary"
+            - name: PRODUCTS_URL
+              value: "http://productplanner.dev/api/product/1/generate/basic"
+            - name: HANG_TIMEOUT
+              value: "300"
+            - name: DB_WEBAPP
+              value: "shopify"
+            - name: MYSQL_DB_HOST
+              value: "mysql.mysql"
+            - name: TEXTUAL_DB_PASSWORD
+              value: "yeq25CRCEVMP"
+            - name: TEXTUAL_DB_USER
+              value: "shopify"
+            - name: SHOPIFY_API_KEY
+              value: "b1208170edc164f593b10927e0c4623c"
+            - name: SHOPIFY_API_SECRET
+              value: "4e9e54b4cf9cde7993e601375c3dffec"
+            - name: FORWARD_ADDRESS
+              value: "https://dev.textual.se/app/shopify"
+            - name: CUSTOMER_CREATE_OR_GET
+              value: "http://vocabulary.dev/api/vocabulary/1/shopify/shop"
+            - name: CUSTOMER_SET_PAYMENT_ID
+              value: "http://vocabulary.dev/api/vocabulary/1/shopify/payment"
+            - name: VOCABULARY_POD_URL
+              value: "http://vocabulary.dev/api/vocabulary/1/"
+            - name: JWT_SECRET
+              value: "textualsecret"
+          ports:
+            - containerPort: 8080
+              name: shopify-webapp

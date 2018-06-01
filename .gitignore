@@ -1,0 +1,18 @@
+#dependency directory
+node_modules/
+
+#IntelliJ module file
+*.iml
+
+#IntelliJ project files
+.idea/
+
+#Uploaded files
+public/uploads/*
+public/pdf/*
+
+npm-debug.log
+.DS_Store
+.sass-cache/
+
+.kube
